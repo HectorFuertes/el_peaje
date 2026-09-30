@@ -40,6 +40,10 @@ Cada posición visible funciona como un montón. Las nuevas cartas que se roban 
 
 Antes de empezar puede introducirse una lista de jugadores.
 
+Si no se introducen jugadores, se crea un jugador llamado "Jugador 1".
+
+El primer jugador de la lista comienza la partida.
+
 Se mantiene un jugador activo.
 
 Cuando un jugador acierta una pregunta, el turno pasa al siguiente jugador.
@@ -75,7 +79,8 @@ Si la predicción es incorrecta:
 Si la carta tiene exactamente el mismo valor que la anterior:
 - No se considera acierto ni fallo.
 - La carta se coloca igualmente sobre el montón.
-- Se vuelve a sacar otra carta.
+- La elección Mayor/Menor se conserva.
+- El jugador vuelve a pulsar "Sacar carta" sin tener que elegir de nuevo.
 - El jugador y la posición no cambian.
 
 ## 5. Posición 2 — Mayor o menor
@@ -83,10 +88,10 @@ Si la carta tiene exactamente el mismo valor que la anterior:
 Funciona igual que la posición 1.
 
 Si la predicción es correcta:
-- El turno pasa al siguiente jugador.
 - Se cruza la posición 3 o peaje.
-- Se muestra "¡Bebes x1!" por cruzar el peaje.
-- Se continúa en la posición 4.
+- El jugador que realizó el acierto paga el peaje: "¡Bebes x1!".
+- Después de resolver el peaje, el turno pasa al siguiente jugador.
+- El siguiente jugador continúa en la posición 4.
 
 Si la predicción es incorrecta:
 - Se muestra "¡Bebes x1!".
@@ -96,7 +101,8 @@ Si la predicción es incorrecta:
 Si sale una carta del mismo valor:
 - No se considera acierto ni fallo.
 - Se coloca sobre el montón.
-- Se roba otra carta.
+- La elección Mayor/Menor se conserva.
+- El jugador vuelve a pulsar "Sacar carta" sin tener que elegir de nuevo.
 - El jugador y la posición no cambian.
 
 ## 6. Posición 3 — El peaje
@@ -105,11 +111,13 @@ La tercera carta permanece boca abajo durante la partida.
 
 No se realiza ninguna pregunta en esta posición.
 
-Siempre que el recorrido atraviesa esta posición se muestra:
+Al acertar en la posición 2, el jugador que realizó el acierto paga el peaje:
 
 "¡Bebes x1!"
 
-Después se continúa automáticamente hacia la posición 4.
+Después se pasa el turno al siguiente jugador y se continúa automáticamente hacia la posición 4.
+
+El retroceso por un fallo en la posición 4 incluye el peaje dentro de su penalización total x2. En ese caso se vuelve directamente a la posición 2, sin ejecutar un cruce automático hacia la posición 4 ni añadir otra penalización.
 
 La carta central no se revela hasta el final del juego.
 
@@ -137,8 +145,8 @@ Si el jugador acierta:
 
 Si falla:
 - Se paga el peaje y además se penaliza el fallo.
-- Se muestra "¡Bebes x2!".
-- Se vuelve a la posición 2.
+- Se muestra "¡Bebes x2!" en total.
+- Se vuelve directamente a la posición 2, sin ejecutar además un cruce automático hacia la posición 4 ni añadir otro peaje.
 - El mismo jugador continúa.
 
 ## 8. Posición 5 — Palo
@@ -177,6 +185,8 @@ Por ejemplo:
 
 "7 de Copas"
 
+Las 40 combinaciones posibles de valor y palo siguen disponibles como respuestas, aunque algunas cartas ya se hayan visto. No se eliminan opciones basándose en cartas conocidas.
+
 Después de realizar la elección se da la vuelta a la carta central.
 
 Si coincide exactamente con la respuesta:
@@ -189,13 +199,15 @@ En ambos casos la partida termina y aparece la opción:
 
 "Volver a jugar"
 
+"Volver a jugar" conserva la lista de jugadores, crea y baraja un nuevo mazo de 40 cartas y vuelve a repartir. La nueva partida comienza en la posición 1 con el primer jugador de la lista y sin una elección pendiente.
+
 ## 10. Agotamiento del mazo
 
 Las cartas robadas no regresan inmediatamente al mazo.
 
 Cada nueva carta permanece encima del montón correspondiente.
 
-Si el mazo de robo se queda sin cartas:
+Cuando se consume la última carta del mazo, se reconstruye inmediatamente después de colocar esa carta sobre su montón y resolver su resultado:
 
 - Se conserva la carta central boca abajo.
 - Se conserva la carta superior actual de los montones 1, 2, 4 y 5.
@@ -203,11 +215,13 @@ Si el mazo de robo se queda sin cartas:
 - Las cartas recogidas se barajan.
 - Esas cartas forman un nuevo mazo de robo.
 
-La posición actual, el jugador actual y el estado de la partida no cambian durante este proceso.
+La reconstrucción no modifica la posición, el jugador ni la fase resultantes de esa jugada. Tampoco modifica la elección pendiente; en particular, conserva la elección Mayor/Menor si la última carta produjo un empate.
 
 ## 11. Flujo de interacción
 
 Las respuestas y el robo de cartas deben ser acciones separadas.
+
+Una elección puede modificarse libremente hasta ejecutar "Sacar carta". En la pregunta final, la elección de valor y palo y el revelado de la carta central también son acciones separadas; la elección puede modificarse hasta revelar la carta.
 
 Ejemplo:
 
